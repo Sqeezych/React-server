@@ -1,26 +1,108 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
-.todoList {
-  width: 500px;
+.container {
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.todoInput {
-  width: 500px;
-  min-height: 20px;
-  border: 2px solid black;
+h1 {
+  color: #333;
+  margin-bottom: 30px;
 }
 
-.todoItem {
-  width: 500px;
-  min-height: 20px;
-  margin-bottom: 2px;
-  border: 1px solid black;
-  align-items: left;
+.taskForm input[type='text'] {
+  width: 70%;
+  padding: 12px;
+  margin-right: 10px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+}
+
+.taskForm button {
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.taskForm button:hover {
+  background-color: #0056b3;
+}
+
+.taskList {
+  list-style-type: none;
+  margin-top: 40px;
+}
+
+.taskItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border-left: 5px solid #007bff;
+}
+
+.taskItem .taskText {
+  flex-grow: 1;
+  margin-right: 20px;
+}
+
+.taskItem button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.deleteBtn {
+  color: red;
+  text-decoration: none;
+}
+
+.completeBtn {
+  color: green;
+  text-decoration: none;
+}
+
+.completed {
+  color: black;
+  text-decoration: line-through;
+}
+
+.loader {
+  border: 8px solid #f3f3f3; /* Цвет фона круга */
+  border-top: 8px solid #3498db; /* Цвет движущейся части */
+  border-radius: 50%; /* Делаем элемент круглым */
+  width: 40px; /* Размер круга */
+  height: 40px; /* Размер круга */
+  animation: spin 2s linear infinite; /* Анимация вращения */
+  margin: auto; /* Центрирование по горизонтали */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); } /* Начальное положение */
+  100% { transform: rotate(360deg); } /* Поворот на 360 градусов */
 }
