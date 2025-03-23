@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export default function useRequestGetTodos (isRefresh) {
+export const useRequestGetTodos = (isRefresh) => {
     const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -16,6 +16,6 @@ export default function useRequestGetTodos (isRefresh) {
 
     return {
         isLoading,
-        todos
+        todos,
     }
 }
