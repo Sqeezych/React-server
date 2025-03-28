@@ -13,7 +13,7 @@ export const useRequestUpdateTodo = (refreshItems) => {
         })
             .then(rowResponse => rowResponse.json())
             .then(answer => console.log('Дело выполнено'))
-            .finally(refreshItems())
+            .finally(() => refreshItems())
     }
     
     return completeButton

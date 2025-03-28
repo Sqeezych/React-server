@@ -7,7 +7,7 @@ export function useRequestDeleteTodo(refreshItems) {
     })
       .then(rowResponse => rowResponse.json())
       .then(response => console.log('Дело удалено'))
-    refreshItems()
+      .finally(() => refreshItems())
   }
   
   return deleteButton

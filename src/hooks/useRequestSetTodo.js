@@ -15,8 +15,10 @@ export const useRequestSetTodo = (todo, setTodo, refreshItems) => {
                   "completed": false
                 }),
             })
-            setTodo('');
-            refreshItems();
+            .finally(() => {
+                setTodo('');
+                refreshItems();
+            })
         }
     }
 
