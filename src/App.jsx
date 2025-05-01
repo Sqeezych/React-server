@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './hooks/useRequestGetTodos'
 import './App.css';
 import { 
   useRequestGetTodos,
   useRequestDeleteTodo,
   useRequestSetTodo,
-  useRequestUpdateTodo
+  useRequestUpdateTodo,
+  debounce
  } from './hooks';
 
 export default function App() {
@@ -13,6 +14,8 @@ export default function App() {
   const [isRefresh, setIsRefresh] = useState(false);
   const [todo, setTodo] = useState('');
   const [todosForWiev, setTodosForWiev] = useState([]);
+  const [isSorted, setIsSorted] = useState(false);
+  const isSortedRef = useRef(isSorted);
   const {isLoading, todosFromServer} = useRequestGetTodos(isRefresh, setTodosForWiev);
   const submitForm = useRequestSetTodo(todo, setTodo, refreshItems);
   const completeButton = useRequestUpdateTodo(refreshItems);
@@ -23,19 +26,31 @@ export default function App() {
   function inputOnChange({ target }) {
     let arr = [];
     setTodo(target.value);
-    if (target.value !== '') {
-      todosFromServer.forEach(elem => {
-        if(elem.title.indexOf(target.value) !== -1) {
-          console.log(target.value)
-          console.log(elem.title)
-          arr.push(elem)
-        }
-      });
-      setTodosForWiev(arr);
-    } else if (target.value === '') {
+    debounce (() => {
+      if (target.value !== '') {
+        todosFromServer.forEach((elem) => {
+          if(elem.title.toLowerCase().indexOf(target.value.toLowerCase()) !== -1) {
+            arr.push(elem)
+          }
+        });
+        setTodosForWiev(arr);
+      } else if (target.value === '') {
+        setTodosForWiev(todosFromServer);
+      }}, 1500) 
+  }
+
+  function sortButton() {
+    setIsSorted(!isSorted);
+    isSortedRef.current = !isSorted;
+
+    if(isSortedRef.current) {
+      todosForWiev.sort((a, b) => a.title.localeCompare(b.title, 'ru', {ignorePunctuation: true}));
+    } else {
       setTodosForWiev(todosFromServer);
+      setTodo('');
+      setIsRefresh(!isRefresh);
     }
-    
+
   }
  
   return (
@@ -43,12 +58,13 @@ export default function App() {
         <h1>Мой список дел</h1>
         <form className="taskForm" onSubmit={submitForm}>
             <input 
-            type="text" 
-            value={todo} 
-            className="newTask" 
-            onChange={inputOnChange}
-            placeholder="Добавьте новое дело..." />
-            <button type="submit">Добавить</button>
+              type="text" 
+              value={todo} 
+              className="newTask" 
+              onChange={inputOnChange}
+              placeholder="Добавьте новое дело..." />
+            <button className="submitButton" type="submit">Добавить</button>
+            <button className={isSortedRef.current ? "sortButton active" : "sortButton"} onClick={sortButton} type="button">Сортировать</button>
         </form>
         
         <div className="taskList">

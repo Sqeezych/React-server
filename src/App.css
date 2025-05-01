@@ -50,6 +50,14 @@ h1 {
   background-color: #0056b3;
 }
 
+.taskForm button.active {
+  background-color: #406680;
+}
+
+.submitButton {
+  margin-right: 5px;
+}
+
 .taskList {
   list-style-type: none;
   margin-top: 40px;
