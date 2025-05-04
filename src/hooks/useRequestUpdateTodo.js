@@ -1,19 +1,15 @@
-export const useRequestUpdateTodo = (refreshItems) => {
+import { ref, update } from "firebase/database";
+import { db } from "../firebase";
+
+export const useRequestUpdateTodo = () => {
 
     function completeButton({ target }) {
 
-        const url = "http://localhost:3000/todos" + '/' + Number(target.id)
-
-        fetch(url, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json;charset=utf-8" },
-            body: JSON.stringify({
-              "completed": true
-            }),
+        const todoDbRef = ref(db, "todos" + "/" + target.id);
+        update(todoDbRef, {
+            "completed": true,
         })
-            .then(rowResponse => rowResponse.json())
-            .then(answer => console.log('Дело выполнено'))
-            .finally(() => refreshItems())
+            .then((response) => console.log('Статус изменен'))
     }
     
     return completeButton

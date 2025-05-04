@@ -1,24 +1,21 @@
-export const useRequestSetTodo = (todo, setTodo, refreshItems) => {
+import { ref, push } from "firebase/database";
+import { db } from '../firebase.js';
+
+export const useRequestSetTodo = (todo, setTodo) => {
     
     function submitForm(event) {
 
         event.preventDefault();
+        const todosDbRef = ref(db, "todos");
 
         if (!todo) {
             alert('Введено некорректное значение')
         } else {
-            fetch("http://localhost:3000/todos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json;charset=utf-8" },
-                body: JSON.stringify({
-                  "title": todo.trim(),
-                  "completed": false
-                }),
+            push(todosDbRef, {
+                "title": todo.trim(),
+                "completed": false
             })
-            .finally(() => {
-                setTodo('');
-                refreshItems();
-            })
+                .then((response) => setTodo(''))
         }
     }
 

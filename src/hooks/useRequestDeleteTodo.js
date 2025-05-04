@@ -1,13 +1,13 @@
-export function useRequestDeleteTodo(refreshItems) {
+import { ref, remove } from "firebase/database";
+import { db } from "../firebase";
+
+export function useRequestDeleteTodo() {
 
   function deleteButton({ target }) {
-    const url = "http://localhost:3000/todos" + '/' + Number(target.id)
-    fetch(url, {
-      method: "DELETE",
-    })
-      .then(rowResponse => rowResponse.json())
+
+    const todoDbRef = ref(db, "todos" + "/" + target.id)
+    remove(todoDbRef)
       .then(response => console.log('Дело удалено'))
-      .finally(() => refreshItems())
   }
   
   return deleteButton

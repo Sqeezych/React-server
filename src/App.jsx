@@ -1,34 +1,32 @@
 import { useState, useRef } from 'react';
-import './hooks/useRequestGetTodos'
 import './App.css';
+import Form from './components/Form';
+import TaskList from './components/TaksItem';
+
 import { 
   useRequestGetTodos,
-  useRequestDeleteTodo,
+  // useRequestDeleteTodo,
   useRequestSetTodo,
-  useRequestUpdateTodo,
+  // useRequestUpdateTodo,
   debounce
  } from './hooks';
 
 export default function App() {
-
-  const [isRefresh, setIsRefresh] = useState(false);
   const [todo, setTodo] = useState('');
-  const [todosForWiev, setTodosForWiev] = useState([]);
+  const [todosForWiev, setTodosForWiev] = useState({});
   const [isSorted, setIsSorted] = useState(false);
   const isSortedRef = useRef(isSorted);
-  const {isLoading, todosFromServer} = useRequestGetTodos(isRefresh, setTodosForWiev);
-  const submitForm = useRequestSetTodo(todo, setTodo, refreshItems);
-  const completeButton = useRequestUpdateTodo(refreshItems);
-  const deleteButton = useRequestDeleteTodo(refreshItems);
-
-  function refreshItems() {setIsRefresh(!isRefresh)};
+  const {isLoading, todosFromServer} = useRequestGetTodos(setTodosForWiev);
+  const submitForm = useRequestSetTodo(todo, setTodo);
+  // const completeButton = useRequestUpdateTodo();
+  // const deleteButton = useRequestDeleteTodo();
 
   function inputOnChange({ target }) {
     let arr = [];
     setTodo(target.value);
     debounce (() => {
       if (target.value !== '') {
-        todosFromServer.forEach((elem) => {
+        Object.entries(todosFromServer).forEach(([id, elem]) => {
           if(elem.title.toLowerCase().indexOf(target.value.toLowerCase()) !== -1) {
             arr.push(elem)
           }
@@ -44,11 +42,13 @@ export default function App() {
     isSortedRef.current = !isSorted;
 
     if(isSortedRef.current) {
-      todosForWiev.sort((a, b) => a.title.localeCompare(b.title, 'ru', {ignorePunctuation: true}));
+      const entriesTodos = Object.entries(todosForWiev);
+      entriesTodos.sort((a, b) => a[1].title.localeCompare(b[1].title, 'en', { ignorePunctuation: true }))
+      const sortedTodos = Object.fromEntries(entriesTodos);
+      setTodosForWiev(sortedTodos);
     } else {
       setTodosForWiev(todosFromServer);
       setTodo('');
-      setIsRefresh(!isRefresh);
     }
 
   }
@@ -56,27 +56,20 @@ export default function App() {
   return (
     <div className="container">
         <h1>Мой список дел</h1>
-        <form className="taskForm" onSubmit={submitForm}>
-            <input 
-              type="text" 
-              value={todo} 
-              className="newTask" 
-              onChange={inputOnChange}
-              placeholder="Добавьте новое дело..." />
-            <button className="submitButton" type="submit">Добавить</button>
-            <button className={isSortedRef.current ? "sortButton active" : "sortButton"} onClick={sortButton} type="button">Сортировать</button>
-        </form>
+        <Form 
+          submitForm={submitForm} 
+          todo={todo} 
+          inputOnChange={inputOnChange}
+          isSortedRef={isSortedRef}
+          sortButton={sortButton} />
         
-        <div className="taskList">
+        <TaskList isLoading={isLoading} todosForWiev={todosForWiev} />
+        {/* <div className="taskList">
           {isLoading && <div className='loader'></div>}
-          {todosForWiev.length < 1 ? <div className="taskItem">Нет данных для отображения</div> : todosForWiev.map((elem) => {
-            return <div className="taskItem" key={elem.id}>
-              <p className={elem.completed ? "completed" : undefined}>{elem.title}</p>
-              <button className='deleteBtn' id={elem.id} onClick={deleteButton}>Delete</button>
-              <button className='completeBtn' id={elem.id} onClick={completeButton}>Done</button>
-            </div>
+          {Object.entries(todosForWiev).length < 1 ? <div className="taskItem">Нет данных для отображения</div> : Object.entries(todosForWiev).map(([id, elem]) => {
+            return <TaskItem key={id} id={id} elem={elem} deleteButton={deleteButton} completeButton={completeButton}/>
           })}
-        </div>
+        </div> */}
     </div>
   )
 }
