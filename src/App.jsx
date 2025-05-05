@@ -1,13 +1,11 @@
 import { useState, useRef } from 'react';
 import './App.css';
 import Form from './components/Form';
-import TaskList from './components/TaksItem';
+import TaskList from './components/TaskList';
 
 import { 
   useRequestGetTodos,
-  // useRequestDeleteTodo,
   useRequestSetTodo,
-  // useRequestUpdateTodo,
   debounce
  } from './hooks';
 
@@ -18,8 +16,6 @@ export default function App() {
   const isSortedRef = useRef(isSorted);
   const {isLoading, todosFromServer} = useRequestGetTodos(setTodosForWiev);
   const submitForm = useRequestSetTodo(todo, setTodo);
-  // const completeButton = useRequestUpdateTodo();
-  // const deleteButton = useRequestDeleteTodo();
 
   function inputOnChange({ target }) {
     let arr = [];
@@ -64,12 +60,6 @@ export default function App() {
           sortButton={sortButton} />
         
         <TaskList isLoading={isLoading} todosForWiev={todosForWiev} />
-        {/* <div className="taskList">
-          {isLoading && <div className='loader'></div>}
-          {Object.entries(todosForWiev).length < 1 ? <div className="taskItem">Нет данных для отображения</div> : Object.entries(todosForWiev).map(([id, elem]) => {
-            return <TaskItem key={id} id={id} elem={elem} deleteButton={deleteButton} completeButton={completeButton}/>
-          })}
-        </div> */}
     </div>
   )
 }
