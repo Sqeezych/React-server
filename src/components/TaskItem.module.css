@@ -1,0 +1,41 @@
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+.taskItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border-left: 5px solid #007bff;
+}
+
+.taskItem .taskText {
+  flex-grow: 1;
+  margin-right: 20px;
+}
+
+.taskItem button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.deleteBtn {
+  color: red;
+  text-decoration: none;
+}
+
+.completeBtn {
+  color: green;
+  text-decoration: none;
+}
+
+.completed {
+  color: black;
+  text-decoration: line-through;
+}

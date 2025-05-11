@@ -1,13 +1,16 @@
 import { useState, useRef } from 'react';
-import './hooks/useRequestGetTodos'
+import { Routes, Route } from 'react-router-dom';
+
 import './App.css';
 import { 
   useRequestGetTodos,
-  useRequestDeleteTodo,
   useRequestSetTodo,
-  useRequestUpdateTodo,
   debounce
  } from './hooks';
+
+import Form from './components/Form';
+import TaskList from './components/TaskList';
+
 
 export default function App() {
 
@@ -18,8 +21,7 @@ export default function App() {
   const isSortedRef = useRef(isSorted);
   const {isLoading, todosFromServer} = useRequestGetTodos(isRefresh, setTodosForWiev);
   const submitForm = useRequestSetTodo(todo, setTodo, refreshItems);
-  const completeButton = useRequestUpdateTodo(refreshItems);
-  const deleteButton = useRequestDeleteTodo(refreshItems);
+
 
   function refreshItems() {setIsRefresh(!isRefresh)};
 
@@ -54,29 +56,27 @@ export default function App() {
   }
  
   return (
-    <div className="container">
-        <h1>Мой список дел</h1>
-        <form className="taskForm" onSubmit={submitForm}>
-            <input 
-              type="text" 
-              value={todo} 
-              className="newTask" 
-              onChange={inputOnChange}
-              placeholder="Добавьте новое дело..." />
-            <button className="submitButton" type="submit">Добавить</button>
-            <button className={isSortedRef.current ? "sortButton active" : "sortButton"} onClick={sortButton} type="button">Сортировать</button>
-        </form>
-        
-        <div className="taskList">
-          {isLoading && <div className='loader'></div>}
-          {todosForWiev.length < 1 ? <div className="taskItem">Нет данных для отображения</div> : todosForWiev.map((elem) => {
-            return <div className="taskItem" key={elem.id}>
-              <p className={elem.completed ? "completed" : undefined}>{elem.title}</p>
-              <button className='deleteBtn' id={elem.id} onClick={deleteButton}>Delete</button>
-              <button className='completeBtn' id={elem.id} onClick={completeButton}>Done</button>
-            </div>
-          })}
-        </div>
-    </div>
+    <>
+      <div className="container">
+          <h1>Мой список дел</h1>
+          <Form 
+            submitForm={submitForm} 
+            todo={todo} 
+            inputOnChange={inputOnChange}
+            isSortedRef={isSortedRef}
+            sortButton={sortButton}/> 
+          
+          <TaskList 
+            isLoading={isLoading} 
+            todosForWiev={todosForWiev} 
+            todosFromServer={todosFromServer}
+            refreshItems={refreshItems} />
+      </div>
+      {/* <Routes>
+        <Route path='/' element={<MainPage />} /> 
+        <Route path='' element={<MainPage />} /> 
+        <Route path='' element={<MainPage />} /> 
+      </Routes> */}
+    </>
   )
 }

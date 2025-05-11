@@ -1,34 +1,24 @@
 {
   "todos": [
     {
-      "title": "fwqfw",
-      "completed": false,
-      "id": 1
-    },
-    {
-      "title": "fwqfw",
+      "title": "Проверить домашку",
       "completed": false,
       "id": 2
     },
     {
-      "title": "wwww",
+      "title": "Сварить суп Том-Ям",
       "completed": false,
       "id": 3
     },
     {
-      "title": "xcacva",
+      "title": "Сварить суп \"Том-Ям\"",
       "completed": false,
       "id": 4
     },
     {
-      "title": "aaaa",
+      "title": "Разделочную доску следует купить",
       "completed": false,
       "id": 5
-    },
-    {
-      "title": "acv",
-      "completed": false,
-      "id": 6
     }
   ]
 }

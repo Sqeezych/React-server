@@ -63,7 +63,7 @@ h1 {
   margin-top: 40px;
 }
 
-.taskItem {
+/* .taskItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -98,7 +98,7 @@ h1 {
 .completed {
   color: black;
   text-decoration: line-through;
-}
+} */
 
 .loader {
   border: 8px solid #f3f3f3; /* Цвет фона круга */
