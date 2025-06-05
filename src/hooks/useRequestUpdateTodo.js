@@ -1,4 +1,4 @@
-export const useRequestUpdateTodo = (refreshItems, todosForWiev) => {
+export const useRequestUpdateTodo = (refreshItems, elem) => {
     
     function updateData(url, status) {
         fetch(url, {
@@ -9,7 +9,6 @@ export const useRequestUpdateTodo = (refreshItems, todosForWiev) => {
                 }),
             })
                 .then(rowResponse => rowResponse.json())
-                .then(answer => console.log('Дело выполнено'))
                 .finally(() => refreshItems())
     }
 
@@ -17,7 +16,7 @@ export const useRequestUpdateTodo = (refreshItems, todosForWiev) => {
 
         const url = "http://localhost:3000/todos" + '/' + Number(target.id)
 
-        if(todosForWiev.completed) {
+        if(elem.completed) {
             updateData(url, false)
         } else {
             updateData(url, true)
