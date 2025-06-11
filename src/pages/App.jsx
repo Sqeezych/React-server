@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Routes, Route } from "react-router-dom";
+import { AppContext } from '../context.js';
 
 import './App.css';
 import { 
@@ -10,8 +10,6 @@ import {
 
 import Form from '../components/Form';
 import TaskList from '../components/TaskList';
-import Task from './Task';
-import NotFound from './NotFound';
 
 const debouncedFunction = debounce (([value, dataFromServer, setter]) => {
       let arr = [];
@@ -36,6 +34,18 @@ export default function App() {
   const {isLoading, todosFromServer} = useRequestGetTodos(isRefresh, setTodosForWiev);
   const submitForm = useRequestSetTodo(todo, setTodo, refreshItems);
 
+  const data = {
+    submitForm: submitForm,
+    todo: todo,
+    todosForWiev: todosForWiev,
+    todosFromServer: todosFromServer,
+    inputOnChange: inputOnChange,
+    isSortedRef: isSortedRef, 
+    sortButton: sortButton,
+    isLoading: isLoading,
+    refreshItems: refreshItems
+  }
+
   function refreshItems() {setIsRefresh(!isRefresh)};
 
   function inputOnChange ({ target }) {
@@ -55,54 +65,27 @@ export default function App() {
       setIsRefresh(!isRefresh);
     }
   }
- 
+  
   return (
-    <>
-      <Routes>
-        <Route path="/" element={
-            <div className="container">
-              <h1>Мой список дел</h1>
-              <Form 
-                submitForm={submitForm} 
-                todo={todo} 
-                todosForWiev={todosForWiev}
-                todosFromServer={todosFromServer}
-                inputOnChange={inputOnChange}
-                isSortedRef={isSortedRef}
-                sortButton={sortButton}/> 
-            
-              <TaskList 
-                isLoading={isLoading} 
-                todosForWiev={todosForWiev} 
-                todosFromServer={todosFromServer}
-                refreshItems={refreshItems} />
-            </div>
-        } /> 
-        <Route path="/task/:id" element={<Task isRefresh={isRefresh} refreshItems={refreshItems} />} /> 
-        <Route path="*" element={<NotFound />} /> 
-      </Routes>
-    </>
+    <AppContext.Provider value={data}>
+      <div className="container">
+        <h1>Мой список дел</h1>
+        <Form /> 
+        <TaskList />
+      </div>
+    </AppContext.Provider>
   )
 }
 
-// function MainPage () {
-//     return (
-//       <div className="container">
-//         <h1>Мой список дел</h1>
-//         <Form 
-//           submitForm={submitForm} 
+// submitForm={submitForm} 
 //           todo={todo} 
 //           todosForWiev={todosForWiev}
 //           todosFromServer={todosFromServer}
-//           isSortedRef={isSortedRef}
-//           sortButton={sortButton}/> 
 //           inputOnChange={inputOnChange}
-            
-//         <TaskList 
+//           isSortedRef={isSortedRef}
+//           sortButton={sortButton}
+
+// isLoading={isLoading} 
 //           todosForWiev={todosForWiev} 
 //           todosFromServer={todosFromServer}
-//           refreshItems={refreshItems} />
-//           isLoading={isLoading} 
-//       </div>
-//     )
-//   }
+//           refreshItems={refreshItems} 

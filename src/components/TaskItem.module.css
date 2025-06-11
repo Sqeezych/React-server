@@ -1,41 +1,51 @@
-a {
-    text-decoration: none;
-    color: #000;
-}
-
 .taskItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: left;
+  position: relative;
   padding: 15px;
+  padding-right: 120px;
   margin-bottom: 10px;
   background-color: #f9f9f9;
   border-left: 5px solid #007bff;
+  overflow-wrap: anywhere;
+}
+
+.buttonsDiv {
+  position: absolute;
+  width: 250px;
+  left: 63%;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
 
 .taskItem .taskText {
-  flex-grow: 1;
   margin-right: 20px;
 }
 
 .taskItem button {
-  background-color: transparent;
+  margin-top: 5px;
+  padding: 6px 10px;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
 }
 
-/* .deleteBtn {
-  color: red;
-  text-decoration: none;
+button.deleteBtn {
+  color: white;
+  background-color: red;
+  border-radius: 5px;
+  margin-right: 5px;
 }
 
-.completeBtn {
-  color: green;
-  text-decoration: none;
-} */
+button.completeBtn {
+  color: white;
+  background-color: green;
+  border-radius: 5px;
+}
+
+button:hover {
+  opacity: 0.6;
+}
 
 .completed {
-  color: black;
   text-decoration: line-through;
 }

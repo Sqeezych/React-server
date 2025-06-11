@@ -1,19 +1,23 @@
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AppContext } from '../context';
+import { useRequestDeleteTodo } from '../hooks';
+import { useRequestUpdateTodo } from '../hooks';
 import styles from './TaskItem.module.css';
 
 export default function TaskItem (props) {
 
-    function setLengthOfString (string) {
-        if (string.length > 26) {
-            return string.slice(0, 25) + '...';
-        }
+    const { refreshItems } = useContext(AppContext);
 
-        return string;
-    }
+    const completeButton = useRequestUpdateTodo(refreshItems, props.elem);
+    const deleteButton = useRequestDeleteTodo(refreshItems);
 
     return (
         <div className={styles.taskItem}>
-            <Link  to={`/task/${props.id}`} className={props.elem.completed ? styles.completed : undefined}>{setLengthOfString(props.elem.title)}</Link>
+            <p className={props.elem.completed ? styles.completed : undefined}>{props.elem.title}</p>
+            <div className={styles.buttonsDiv}>
+                <button className={styles.deleteBtn} id={props.id} onClick={deleteButton}>Удал.</button>
+                <button className={styles.completeBtn} id={props.id} onClick={completeButton}>Вып.</button>
+            </div>
         </div>
     )
 }
