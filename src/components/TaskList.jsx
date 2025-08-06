@@ -1,17 +1,15 @@
 import TaskItem from "./TaskItem";
+import { useSelector } from "react-redux";
 
-export default function TaskList (props) {
+export default function TaskList () {
+    const isLoading = useSelector(selectIsLoading);
+    const todosForWiev = useSelector(selectTodosForWiev);
 
     return (
         <div className="taskList">
-            {props.isLoading && <div className='loader'></div>}
-            {props.todosForWiev.length < 1 ? <div className="taskItem">Нет данных для отображения</div> : props.todosForWiev.map((elem, id) => {
-                return (
-                    <TaskItem 
-                        key={id} 
-                        id={elem.id} 
-                        elem={elem} 
-                    />)
+            {isLoading && <div className='loader'></div>}
+            {todosForWiev.length < 1 ? <div className="taskItem">Нет данных для отображения</div> : todosForWiev.map((elem, id) => {
+                return <TaskItem key={id} id={elem.id} elem={elem} />
             })}
         </div>
     )
