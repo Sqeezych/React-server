@@ -1,1 +1,1 @@
-export const selectTodosForWiev = state => state.todosForWiev;
+export const selectTodosForWiev = (state) => state.todosForWiev;

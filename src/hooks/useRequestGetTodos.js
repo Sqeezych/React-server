@@ -1,24 +1,41 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setTodosFromServer, setTodosForWiev, loading } from "../actions";
 
-export const useRequestGetTodos = (isRefresh, setTodosForWiev) => {
-    const [todosFromServer, setTodosFromServer] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+export const useRequestGetTodos = () => {
+    // const [todosFromServer, setTodosFromServer] = useState([]);
+    // const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
 
-        setIsLoading(true)
+        dispatch(loading(true));
         fetch("http://localhost:3000/todos")
           .then(response => response.json())
           .then((data) => {
-            setTodosFromServer(data);
-            setTodosForWiev(data);
+            dispatch(setTodosFromServer(data));
+            dispatch(setTodosForWiev(data));
           })
-          .finally(() => setIsLoading(false))
+          .finally(() => dispatch(loading(false)))
     
-    }, [isRefresh])
-
-    return {
-        isLoading,
-        todosFromServer,
-    }
+    }, [])
 }
+
+// useEffect(() => {
+
+//         setIsLoading(true)
+//         fetch("http://localhost:3000/todos")
+//           .then(response => response.json())
+//           .then((data) => {
+//             setTodosFromServer(data);
+//             setTodosForWiev(data);
+//           })
+//           .finally(() => setIsLoading(false))
+    
+//     }, [isRefresh])
+
+//     return {
+//         isLoading,
+//         todosFromServer,
+//     }

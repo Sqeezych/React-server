@@ -1,3 +1,6 @@
-export const LOADING = {
-    type: "LOADING",
+export const loading = (status) => {
+    return {
+        type: "LOADING",
+        payload: status,
+    }
 }

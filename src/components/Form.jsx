@@ -1,32 +1,53 @@
 import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectIsSorted, selectTodo } from "../selectors";
-import { debouncedFunction } from "../hooks";
+import { selectIsSorted, selectTodo, selectTodosForWiev, selectTodosFromServer } from "../selectors";
+import { setTodo, setTodosForWiev } from "../actions";
+import { debounce } from "../debounce";
 import { useRequestSetTodo } from "../hooks";
 
-export default function Form (props) {
+const debouncedFunction = debounce (([value, dataFromServer, setter]) => {
+    let arr = [];
+    if (value !== '') {
+    dataFromServer.forEach((elem) => {
+        if(elem.title.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
+            arr.push(elem)
+        }
+    });
+    setter(arr);
+    } else if (value === '') {
+        setter(dataFromServer);
+}}, 1000)
+
+export default function Form () {
+    
     const isSorted = useSelector(selectIsSorted);
     const todo = useSelector(selectTodo);
+    const todosFromServer = useSelector(selectTodosFromServer);
+    const todosForWiev = useSelector(selectTodosForWiev);
+
     const isSortedRef = useRef(isSorted);
     const dispatch = useDispatch();
 
-    const submitForm = useRequestSetTodo(todo, setTodo, props.refreshItems);
+    const submitForm = useRequestSetTodo();
 
     function inputOnChange ({ target }) {
-        setTodo(target.value);
-        debouncedFunction(target.value, props.todosFromServer, props.setTodosForWiev);
+        dispatch(setTodo(target.value));
+        debouncedFunction(target.value, todosFromServer, todosForWiev);
     } 
 
     function sortButton() {
-        setIsSorted(!isSorted);
+
+        // setIsSorted(!isSorted);
+        dispatch(SORTING);
         isSortedRef.current = !isSorted;
 
         if (isSortedRef.current) {
-            props.todosForWiev.sort((a, b) => a.title.localeCompare(b.title, 'ru', {ignorePunctuation: true}));
+            todosForWiev.sort((a, b) => a.title.localeCompare(b.title, 'ru', {ignorePunctuation: true}));
         } else {
-            props.setTodosForWiev(props.todosFromServer);
-            setTodo('');
-            props.refreshItems();
+            dispatch(setTodosForWiev(todosFromServer))
+            dispatch(setTodo(''));
+            // props.setTodosForWiev(props.todosFromServer);
+            // props.refreshItems();
         }
     }
 

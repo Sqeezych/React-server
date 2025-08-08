@@ -1,4 +1,10 @@
-export const useRequestSetTodo = (todo, setTodo, refreshItems) => {
+import { useDispatch, useSelector } from "react-redux";
+import { selectTodo } from "../selectors";
+import { setTodo } from "../actions";
+
+export const useRequestSetTodo = () => {
+    const todo = useSelector(selectTodo);
+    const dispatch = useDispatch();
     
     function submitForm(event) {
 
@@ -16,8 +22,8 @@ export const useRequestSetTodo = (todo, setTodo, refreshItems) => {
                 }),
             })
             .finally(() => {
-                setTodo('');
-                refreshItems();
+                dispatch(setTodo(''));
+                // setTodo('');
             })
         }
     }

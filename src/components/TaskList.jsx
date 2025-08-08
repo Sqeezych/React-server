@@ -1,5 +1,6 @@
 import TaskItem from "./TaskItem";
 import { useSelector } from "react-redux";
+import { selectIsLoading, selectTodosForWiev } from "../selectors";
 
 export default function TaskList () {
     const isLoading = useSelector(selectIsLoading);
