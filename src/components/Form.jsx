@@ -1,22 +1,9 @@
 import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectIsSorted, selectTodo, selectTodosForWiev, selectTodosFromServer } from "../selectors";
-import { setTodo, setTodosForWiev } from "../actions";
-import { debounce } from "../debounce";
+import { setTodo, setTodosForWiev, SORTING } from "../actions";
+import { debouncedFunction } from "../debounce";
 import { useRequestSetTodo } from "../hooks";
-
-const debouncedFunction = debounce (([value, dataFromServer, setter]) => {
-    let arr = [];
-    if (value !== '') {
-    dataFromServer.forEach((elem) => {
-        if(elem.title.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
-            arr.push(elem)
-        }
-    });
-    setter(arr);
-    } else if (value === '') {
-        setter(dataFromServer);
-}}, 1000)
 
 export default function Form () {
     
@@ -24,35 +11,37 @@ export default function Form () {
     const todo = useSelector(selectTodo);
     const todosFromServer = useSelector(selectTodosFromServer);
     const todosForWiev = useSelector(selectTodosForWiev);
-
     const isSortedRef = useRef(isSorted);
+    const timeoutRef = useRef(null);
     const dispatch = useDispatch();
 
     const submitForm = useRequestSetTodo();
 
     function inputOnChange ({ target }) {
         dispatch(setTodo(target.value));
-        debouncedFunction(target.value, todosFromServer, todosForWiev);
+        timeoutRef.current = debouncedFunction(target.value, todosFromServer, dispatch, setTodosForWiev);
     } 
 
     function sortButton() {
 
-        // setIsSorted(!isSorted);
         dispatch(SORTING);
         isSortedRef.current = !isSorted;
 
         if (isSortedRef.current) {
-            todosForWiev.sort((a, b) => a.title.localeCompare(b.title, 'ru', {ignorePunctuation: true}));
+            let sortedTodos = [...todosForWiev];
+            sortedTodos.sort((a, b) => a.title.localeCompare(b.title, 'ru', { ignorePunctuation: true }));
+            dispatch(setTodosForWiev(sortedTodos));
         } else {
             dispatch(setTodosForWiev(todosFromServer))
             dispatch(setTodo(''));
-            // props.setTodosForWiev(props.todosFromServer);
-            // props.refreshItems();
         }
     }
 
     return (
-        <form className="taskForm" onSubmit={submitForm}>
+        <form className="taskForm" onSubmit={(e) => {
+            submitForm(e);
+            clearTimeout(timeoutRef.current);
+        }}>
             <input 
               type="text" 
               value={todo} 

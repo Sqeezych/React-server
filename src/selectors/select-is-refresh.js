@@ -1,0 +1,1 @@
+export const selectIsRefresh = state => state.appState.isRefresh;

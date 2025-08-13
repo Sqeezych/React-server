@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodo } from "../selectors";
-import { setTodo } from "../actions";
+import { setTodo, IS_REFRESH } from "../actions";
 
 export const useRequestSetTodo = () => {
     const todo = useSelector(selectTodo);
@@ -23,7 +23,7 @@ export const useRequestSetTodo = () => {
             })
             .finally(() => {
                 dispatch(setTodo(''));
-                // setTodo('');
+                dispatch(IS_REFRESH);
             })
         }
     }

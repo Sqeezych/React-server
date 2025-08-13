@@ -4,11 +4,24 @@ export function debounce(func, delay) {
     
     return function (...args) { 
       clearTimeout(timeout);
-      timeout = setTimeout(() => func(args), delay);
+      return timeout = setTimeout(() => func(args), delay);
     };
 }
 
-// export const debouncedFunction = debounce (([value, dataFromServer, setter]) => {
+  export const debouncedFunction = debounce (([value, dataFromServer, dispatch, action]) => {
+        let arr = [];
+        if (value !== '') {
+            dataFromServer.forEach((elem) => {
+                if(elem.title.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
+                    arr.push(elem);
+                }
+            });
+            dispatch(action(arr));
+        } else if (value === '') {
+            dispatch(action(dataFromServer));
+        }}, 1000)
+
+// const debouncedFunction = debounce (([value, dataFromServer, setter]) => {
 //     let arr = [];
 //     if (value !== '') {
 //     dataFromServer.forEach((elem) => {
